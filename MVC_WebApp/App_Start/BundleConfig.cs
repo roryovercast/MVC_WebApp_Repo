@@ -9,8 +9,7 @@ namespace MVC_WebApp
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/d3").Include(
-                        "~/Scripts/d3.min.js",
-                        "~/Scripts/script.js"));
+                        "~/Scripts/d3.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
