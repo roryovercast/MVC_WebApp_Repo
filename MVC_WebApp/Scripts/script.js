@@ -3,9 +3,9 @@ var bardata = [];
 for (var i = 0; i < 50; i++) {
     bardata.push(Math.round(Math.random()*30+1))
 }
-bardata.sort(function compareNumbers(a, b) {
+/*bardata.sort(function compareNumbers(a, b) {
     return a - b;
-})
+})*/
 
 //********Setting up chart variables************\\
 
@@ -46,18 +46,20 @@ var myChart = d3.select('#chart').append('svg')
     .attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom)
     .append('g')
-    .attr('transform', 'translate('+ margin.left+', '+ margin.top +')')
-    .selectAll('rect').data(bardata)
-    .enter().append('rect')
-        .style('fill', function(d, i) {
-            return colors(i);
-        })
-        .attr('width', xScale.rangeBand())
-        .attr('x', function (d, i) {
-            return xScale(i);
-        })
-        .attr('height', 0)
-        .attr('y', height)
+    .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+
+var bars = myChart.selectAll('rect').data(bardata)
+
+bars.enter().append('rect')
+    .style('fill', function(d, i) {
+        return colors(i);
+    })
+    .attr('width', xScale.rangeBand())
+    .attr('x', function (d, i) {
+        return xScale(i);
+    })
+    .attr('height', 0)
+    .attr('y', height)
 
     //Events on the Chart
     .on('mouseover', function (d) {
