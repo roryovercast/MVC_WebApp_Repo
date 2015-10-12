@@ -21,7 +21,6 @@ function *genData() {
 }
 
 let dataStream = genData();
-
 let bardata = [dataStream.next().value];
 
 //********Setting up chart variables************\\
@@ -75,7 +74,6 @@ var vAxis = d3.svg.axis()
     .scale(yScale)
     .orient('left')
     .ticks(10)
-	.innerTickSize(-width);
 
 let yAxis = svg.append('g')
 	.attr('transform', `translate(${margin.left}, ${margin.top})`)
@@ -84,7 +82,6 @@ let yAxis = svg.append('g')
 var hAxis = d3.svg.axis()
     .scale(xAxisScale)
     .orient('bottom')
-    //.tickValues([0,10,20,30,40]);
 
 let xAxis = svg.append('g')
     .attr('transform', `translate(${margin.left}, ${height + margin.top})`)
@@ -141,23 +138,21 @@ function updateBars(bars) {
 }
 
 function update(svg) {
-	let duration = 500;
 
 	updateScales();
 
 	let bars = svg.selectAll('rect').data(bardata, (d) => d.timestamp);
 	bars.enter().call(enterBars);
-	bars.transition(duration).call(updateBars);
-	bars.exit().transition(duration)
+	bars.transition().call(updateBars);
+	bars.exit().transition()
 		.attr('width', 0)
 		.remove();
         
     // myPath.datum(bardata)
         // .attr('d', line);
 	
-	yAxis.transition(duration).call(vAxis);
-	//hAxis.tickValues(bardata.map(d => d.timestamp).filter(d => d % 5 == 0));
-	xAxis.transition(duration).call(hAxis);
+	yAxis.transition().call(vAxis);
+	xAxis.transition().call(hAxis);
 }
 update(myChart);
 
@@ -165,8 +160,6 @@ setInterval (function() {
 	if (bardata.length == 50) {
 		bardata.shift();
 	}
-    bardata.push(dataStream.next().value);
-    //console.log(bardata);
-    
+    bardata.push(dataStream.next().value);    
     update(myChart);
 }, 1000);
