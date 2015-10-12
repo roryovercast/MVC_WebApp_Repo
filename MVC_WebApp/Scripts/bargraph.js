@@ -1,5 +1,3 @@
-"use strict";
-
 //********Setting up bardata variable***********\\
 
 function randInt(floor, max) {
@@ -13,15 +11,15 @@ function randInt(floor, max) {
 }
 
 function *genData() {
-	let max = 50;
+	var max = 50;
 	while (true) {
 		yield {timestamp: new Date(), value: randInt(1, max)};
 		max++;
 	}
 }
 
-let dataStream = genData();
-let bardata = [dataStream.next().value];
+var dataStream = genData();
+var bardata = [dataStream.next().value];
 
 //********Setting up chart variables************\\
 
@@ -48,12 +46,18 @@ var xAxisScale = d3.time.scale()
 	.range([0, width]);
 
 function updateScales() {
-	let maxValue = d3.max(bardata.map(d => d.value));
-	let timeExtent = d3.extent(bardata.map(d => d.timestamp));
+    var maxValue = d3.max(bardata.map(function(d) {
+        return d.value
+    }));
+    var timeExtent = d3.extent(bardata.map(function(d) {
+        return d.timestamp   
+    }));
 	
 	colors.domain(timeExtent);
 	yScale.domain([0, maxValue]);
-	xScale.domain(bardata.map(d => d.timestamp));
+	xScale.domain(bardata.map(function(d) {
+	    return d.timestamp   
+	}));
 	xAxisScale.domain(timeExtent);
 }
 
@@ -75,7 +79,7 @@ var vAxis = d3.svg.axis()
     .orient('left')
     .ticks(10)
 
-let yAxis = svg.append('g')
+var yAxis = svg.append('g')
 	.attr('transform', `translate(${margin.left}, ${margin.top})`)
 	.attr('class', 'axis');
 	
@@ -83,11 +87,11 @@ var hAxis = d3.svg.axis()
     .scale(xAxisScale)
     .orient('bottom')
 
-let xAxis = svg.append('g')
+var xAxis = svg.append('g')
     .attr('transform', `translate(${margin.left}, ${height + margin.top})`)
 	.attr('class', 'axis');
 	
-// let line = d3.svg.line()
+// var line = d3.svg.line()
     // .x(d => xScale(d.timestamp) + xScale.rangeBand()/2)
     // .y(d => yScale(d.value));
     
@@ -95,7 +99,7 @@ let xAxis = svg.append('g')
 var myChart = svg.append('g')
     .attr('transform', `translate(${margin.left}, ${margin.top})`);
     
-// let myPath = myChart.append('path');
+// var myPath = myChart.append('path');
 	
 function hoverTooltip(selection, makeText) {
 	selection.on('mouseover', function (d) {
@@ -119,29 +123,49 @@ function hoverTooltip(selection, makeText) {
 
 function enterBars(bars) {
     bars.append('rect')
-        .style('fill', (d) => colors(d.timestamp))
+        .style('fill', function(d){
+            return colors(d.timestamp)
+        })
         .attr('width', xScale.rangeBand())
-        .attr('x', (d, i) => xScale(d.timestamp) + xScale.rangeBand() * 1.2)
-        .attr('height', (d) => height - yScale(d.value))
-        .attr('y', (d) => yScale(d.value))
+        .attr('x', function(d, i) {
+            return xScale(d.timestamp) + xScale.rangeBand() * 1.2
+        })
+        .attr('height', function(d) {
+            return height - yScale(d.value)
+        })
+        .attr('y', function(d) {
+            return yScale(d.value)
+        })
 		.attr('opacity', 0)
-		.call(hoverTooltip, (d) => d.value);
+		.call(hoverTooltip, function(d) {
+		    return d.value
+		});
 }
 
 function updateBars(bars) {
-    bars.style('fill', (d) => colors(d.timestamp))
-		.attr('width', xScale.rangeBand())
-		.attr('x', (d, i) => xScale(d.timestamp))
-        .attr('height', (d, i) => height - yScale(d.value))
-        .attr('y', (d) => yScale(d.value))
-		.attr('opacity', 1);
+    bars.style('fill', function(d){
+        return colors(d.timestamp)
+    })
+        .attr('width', xScale.rangeBand())
+        .attr('x', function(d, i) {
+            return xScale(d.timestamp)
+        })
+        .attr('height', function(d) {
+            return height - yScale(d.value)
+        })
+        .attr('y', function(d) {
+            return yScale(d.value)
+        })
+		.attr('opacity', 1)
 }
 
 function update(svg) {
 
 	updateScales();
 
-	let bars = svg.selectAll('rect').data(bardata, (d) => d.timestamp);
+	var bars = svg.selectAll('rect').data(bardata, function(d) {
+	    return d.timestamp
+	});
 	bars.enter().call(enterBars);
 	bars.transition().call(updateBars);
 	bars.exit().transition()
